@@ -38,10 +38,11 @@ def rand(*size, **kwarg):
 
     """
     dtype = kwarg.pop('dtype', float)
+    out = kwarg.pop('out', None)
     if kwarg:
         raise TypeError('rand() got unexpected keyword arguments %s'
                         % ', '.join(kwarg.keys()))
-    return random_sample(size=size, dtype=dtype)
+    return random_sample(size=size, dtype=dtype, out=out)
 
 
 def randn(*size, **kwarg):
@@ -136,7 +137,7 @@ def random_integers(low, high=None, size=None):
     return randint(low, high + 1, size)
 
 
-def random_sample(size=None, dtype=float):
+def random_sample(size=None, dtype=float, out=None):
     """Returns an array of random values over the interval ``[0, 1)``.
 
     This is a variant of :func:`cupy.random.rand`.
@@ -153,7 +154,7 @@ def random_sample(size=None, dtype=float):
 
     """
     rs = _generator.get_random_state()
-    return rs.random_sample(size=size, dtype=dtype)
+    return rs.random_sample(size=size, dtype=dtype, out=None)
 
 
 def choice(a, size=None, replace=True, p=None):
