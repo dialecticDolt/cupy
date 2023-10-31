@@ -582,10 +582,11 @@ class RandomState(object):
 
         """
         dtype = kwarg.pop('dtype', float)
+        out = kwarg.pop('out', None)
         if kwarg:
             raise TypeError('rand() got unexpected keyword arguments %s'
                             % ', '.join(kwarg.keys()))
-        return self.random_sample(size=size, dtype=dtype)
+        return self.random_sample(size=size, dtype=dtype, out=None)
 
     def randn(self, *size, **kwarg):
         """Returns an array of standard normal random values.
@@ -604,11 +605,12 @@ class RandomState(object):
     _mod1_kernel = _core.ElementwiseKernel(
         '', 'T x', 'x = (x == (T)1) ? 0 : x', 'cupy_random_x_mod_1')
 
-    def _random_sample_raw(self, size, dtype):
+    def _random_sample_raw(self, size, dtype, out=None):
         from cupy_backends.cuda.libs import curand
 
         dtype = _check_and_get_dtype(dtype)
-        out = cupy.empty(size, dtype=dtype)
+        if out is None:
+            out = cupy.empty(size, dtype=dtype)
         if dtype.char == 'f':
             func = curand.generateUniform
         else:
@@ -616,7 +618,7 @@ class RandomState(object):
         func(self._generator, out.data.ptr, out.size)
         return out
 
-    def random_sample(self, size=None, dtype=float):
+    def random_sample(self, size=None, dtype=float, out=None):
         """Returns an array of random values over the interval ``[0, 1)``.
 
         .. seealso::
@@ -626,7 +628,7 @@ class RandomState(object):
         """
         if size is None:
             size = ()
-        out = self._random_sample_raw(size, dtype)
+        out = self._random_sample_raw(size, dtype, out=out)
         RandomState._mod1_kernel(out)
         return out
 
