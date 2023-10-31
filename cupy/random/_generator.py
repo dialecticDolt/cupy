@@ -583,6 +583,9 @@ class RandomState(object):
         """
         dtype = kwarg.pop('dtype', float)
         out = kwarg.pop('out', None)
+        if out is not None:
+            dtype = out.dtype
+
         if kwarg:
             raise TypeError('rand() got unexpected keyword arguments %s'
                             % ', '.join(kwarg.keys()))
