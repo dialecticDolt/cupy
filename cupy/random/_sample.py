@@ -39,6 +39,7 @@ def rand(*size, **kwarg):
     """
     dtype = kwarg.pop('dtype', float)
     out = kwarg.pop('out', None)
+
     if out is not None:
         dtype = out.dtype
 
@@ -157,7 +158,7 @@ def random_sample(size=None, dtype=float, out=None):
 
     """
     rs = _generator.get_random_state()
-    return rs.random_sample(size=size, dtype=dtype, out=None)
+    return rs.random_sample(size=size, dtype=dtype, out=out)
 
 
 def choice(a, size=None, replace=True, p=None):

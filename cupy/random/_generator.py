@@ -589,7 +589,7 @@ class RandomState(object):
         if kwarg:
             raise TypeError('rand() got unexpected keyword arguments %s'
                             % ', '.join(kwarg.keys()))
-        return self.random_sample(size=size, dtype=dtype, out=None)
+        return self.random_sample(size=size, dtype=dtype, out=out)
 
     def randn(self, *size, **kwarg):
         """Returns an array of standard normal random values.
